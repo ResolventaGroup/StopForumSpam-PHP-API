@@ -1,0 +1,28 @@
+{
+    "name": "resolventa/stopforumspam-php-api",
+    "description": "PHP API for StopForumSpam service. See https://www.stopforumspam.com for details.",
+    "keywords": ["stopforumspam", "php", "api"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Pankin",
+            "email": "dpankin@gmail.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "php": ">=7.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "nesbot/carbon": "^2.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "6.*",
+        "fzaninotto/faker": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Resolventa\\StopForumSpamApi\\": "src/"
+        }
+    }
+}
