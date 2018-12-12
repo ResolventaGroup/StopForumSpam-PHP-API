@@ -107,3 +107,15 @@ $settings->setConfidenceThreshold(70);
 // Start analyzer with given settings
 $analyzer = new ResponseAnalyzer($response, new ResponseAnalyzerSettings());
 ```
+
+## Submit spam reports
+To submit spam reports you need to get StopForumSpam API key.
+For usage example see `test/SubmitReportTest.php`
+
+```php
+// Instantiate StopForumSpamApi with API key
+$stopForumSpamApi = new StopForumSpamApi(self::API_KEY);
+
+// Submit report
+$result = $stopForumSpamApi->submitSpamReport(string $username, string $ip, string $email, string $evidence);
+```
