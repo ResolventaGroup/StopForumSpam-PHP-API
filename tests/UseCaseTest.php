@@ -18,6 +18,6 @@ class UseCaseTest extends TestCase
         $response = $stopForumSpamApi->getCheckResponse();
 
         $analyzer = new ResponseAnalyzer($response, new ResponseAnalyzerSettings());
-        $this->assertTrue(!$analyzer->isSpammer());
+        $this->assertTrue(!$analyzer->isSpammerDetected());
     }
 }

@@ -26,7 +26,7 @@ class ResponseAnalyzer
         $this->settings = $settings;
     }
 
-    public function isSpammer(): bool
+    public function isSpammerDetected(): bool
     {
         $spamFlagsCount = 0;
         $types = ['email', 'username', 'ip'];
@@ -42,7 +42,6 @@ class ResponseAnalyzer
 
         return false;
     }
-
 
     private function isSpam(string $type): bool
     {

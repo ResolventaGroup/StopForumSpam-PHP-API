@@ -17,7 +17,7 @@ class ResponseAnalyzerTest extends TestCase
 
         $this->expectException(InvalidResponseFormatException::class);
         $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
-        $analyzer->isSpammer();
+        $analyzer->isSpammerDetected();
     }
 
     public function testResponseError()
@@ -29,7 +29,7 @@ class ResponseAnalyzerTest extends TestCase
 
         $this->expectException(ResponseErrorException::class);
         $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
-        $analyzer->isSpammer();
+        $analyzer->isSpammerDetected();
     }
 
     /**
@@ -40,7 +40,7 @@ class ResponseAnalyzerTest extends TestCase
     {
         $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
 
-        $this->assertTrue($analyzer->isSpammer());
+        $this->assertTrue($analyzer->isSpammerDetected());
     }
 
     /**
@@ -50,7 +50,7 @@ class ResponseAnalyzerTest extends TestCase
     {
         $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
 
-        $this->assertTrue( !$analyzer->isSpammer() );
+        $this->assertTrue( !$analyzer->isSpammerDetected() );
     }
 
     public function testCatchSpammerWithMultipleFlagsSetting()
@@ -77,11 +77,11 @@ class ResponseAnalyzerTest extends TestCase
 
         $settings->setMinSpamFlagsCount(2);
         $analyzer = new ResponseAnalyzer($apiResponse, $settings);
-        $this->assertTrue($analyzer->isSpammer());
+        $this->assertTrue($analyzer->isSpammerDetected());
 
         $settings->setMinSpamFlagsCount(3);
         $analyzer = new ResponseAnalyzer($apiResponse, $settings);
-        $this->assertTrue(!$analyzer->isSpammer());
+        $this->assertTrue(!$analyzer->isSpammerDetected());
     }
 
     public function normalUserResponseDataProvider(): array
