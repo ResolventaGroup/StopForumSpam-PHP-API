@@ -73,7 +73,7 @@ try {
 if($analyzer->isSpammerDetected()) {
     echo "Spam user detected. \n";
 } else {
-    echo "User is good. \n";
+    echo "User is ok. \n";
 }
 ```
 
