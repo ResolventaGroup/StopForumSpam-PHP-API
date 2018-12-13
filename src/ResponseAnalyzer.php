@@ -82,10 +82,11 @@ class ResponseAnalyzer
 
     private function wasRecentlySeenAsSpam(stdClass $info): bool
     {
-        $lastseen = Carbon::createFromFormat('Y-m-d H:i:s', $info->lastseen);
-        $now = Carbon::now();
+        $lastseen = \DateTime::createFromFormat('Y-m-d H:i:s', $info->lastseen);
+        $now = new \DateTime();
+        $differenceInDays = $now->diff($lastseen)->format('%a');
 
-        if($now->diffInDays($lastseen) < $this->settings->getFlagLastSeenDaysAgo()) {
+        if($differenceInDays < $this->settings->getFlagLastSeenDaysAgo()) {
             return true;
         }
 
