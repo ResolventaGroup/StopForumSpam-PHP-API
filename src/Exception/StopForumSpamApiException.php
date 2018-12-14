@@ -1,6 +1,6 @@
 <?php
 namespace Resolventa\StopForumSpamApi\Exception;
 
-class NoApiKeyException extends StopForumSpamApiException
+class StopForumSpamApiException extends \Exception
 {
 }

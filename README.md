@@ -26,6 +26,7 @@ See `example.php` and `tests/UseCaseTest.php` for usage examples.
 use Resolventa\StopForumSpamApi\ResponseAnalyzer;
 use Resolventa\StopForumSpamApi\ResponseAnalyzerSettings;
 use Resolventa\StopForumSpamApi\StopForumSpamApi;
+use Resolventa\StopForumSpamApi\Exception\StopForumSpamApiException;
 
 include ('vendor/autoload.php');
 
@@ -63,17 +64,17 @@ var_dump($response);
  * $settings->setFlagLastSeenDaysAgo(14);
  * $settings->setConfidenceThreshold(70);
  */
+$analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
+
 try {
-    $analyzer = new ResponseAnalyzer($response, new ResponseAnalyzerSettings());
-} catch (Exception $e) {
+    if($analyzer->isSpammerDetected($response)) {
+        echo "Spam user detected. \n";
+    } else {
+        echo "User is ok. \n";
+    }
+} catch (StopForumSpamApiException $e) {
     echo 'Bad response: ',  $e->getMessage(), "\n";
     exit();
-}
-
-if($analyzer->isSpammerDetected()) {
-    echo "Spam user detected. \n";
-} else {
-    echo "User is ok. \n";
 }
 ```
 
@@ -105,7 +106,12 @@ $settings->setFlagLastSeenDaysAgo(14);
 $settings->setConfidenceThreshold(70);
 
 // Start analyzer with given settings
-$analyzer = new ResponseAnalyzer($response, new ResponseAnalyzerSettings());
+$analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
+
+// Validate response with the give analyzer settings
+if($analyzer->isSpammerDetected($response)) {
+    // Throw away that spam registration
+}
 ```
 
 ## Submit spam reports

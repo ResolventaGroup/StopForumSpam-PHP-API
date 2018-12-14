@@ -1,6 +1,6 @@
 <?php
 namespace Resolventa\StopForumSpamApi\Exception;
 
-class InvalidResponseFormatException extends \Exception
+class InvalidResponseFormatException extends StopForumSpamApiException
 {
 }

@@ -16,8 +16,8 @@ class ResponseAnalyzerTest extends TestCase
         $apiResponse = (object)['response'];
 
         $this->expectException(InvalidResponseFormatException::class);
-        $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
-        $analyzer->isSpammerDetected();
+        $analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
+        $analyzer->isSpammerDetected($apiResponse);
     }
 
     public function testResponseError()
@@ -28,8 +28,8 @@ class ResponseAnalyzerTest extends TestCase
         ];
 
         $this->expectException(ResponseErrorException::class);
-        $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
-        $analyzer->isSpammerDetected();
+        $analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
+        $analyzer->isSpammerDetected($apiResponse);
     }
 
     /**
@@ -38,9 +38,9 @@ class ResponseAnalyzerTest extends TestCase
      */
     public function testCatchSpammer(stdClass $apiResponse)
     {
-        $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
+        $analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
 
-        $this->assertTrue($analyzer->isSpammerDetected());
+        $this->assertTrue($analyzer->isSpammerDetected($apiResponse));
     }
 
     /**
@@ -48,9 +48,9 @@ class ResponseAnalyzerTest extends TestCase
      */
     public function testDoNotCatchNormalUser(stdClass $apiResponse)
     {
-        $analyzer = new ResponseAnalyzer($apiResponse, new ResponseAnalyzerSettings());
+        $analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
 
-        $this->assertTrue( !$analyzer->isSpammerDetected() );
+        $this->assertTrue( !$analyzer->isSpammerDetected($apiResponse) );
     }
 
     public function testCatchSpammerWithMultipleFlagsSetting()
@@ -76,12 +76,12 @@ class ResponseAnalyzerTest extends TestCase
         ];
 
         $settings->setMinSpamFlagsCount(2);
-        $analyzer = new ResponseAnalyzer($apiResponse, $settings);
-        $this->assertTrue($analyzer->isSpammerDetected());
+        $analyzer = new ResponseAnalyzer($settings);
+        $this->assertTrue($analyzer->isSpammerDetected($apiResponse));
 
         $settings->setMinSpamFlagsCount(3);
-        $analyzer = new ResponseAnalyzer($apiResponse, $settings);
-        $this->assertTrue(!$analyzer->isSpammerDetected());
+        $analyzer = new ResponseAnalyzer($settings);
+        $this->assertTrue(!$analyzer->isSpammerDetected($apiResponse));
     }
 
     public function normalUserResponseDataProvider(): array

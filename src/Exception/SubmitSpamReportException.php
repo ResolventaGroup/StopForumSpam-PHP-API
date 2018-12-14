@@ -1,6 +1,6 @@
 <?php
 namespace Resolventa\StopForumSpamApi\Exception;
 
-class SubmitSpamReportException extends \Exception
+class SubmitSpamReportException extends StopForumSpamApiException
 {
 }

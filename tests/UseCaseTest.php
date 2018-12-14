@@ -17,7 +17,7 @@ class UseCaseTest extends TestCase
             ->checkUsername('someGreatUsername');
         $response = $stopForumSpamApi->getCheckResponse();
 
-        $analyzer = new ResponseAnalyzer($response, new ResponseAnalyzerSettings());
-        $this->assertTrue(!$analyzer->isSpammerDetected());
+        $analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
+        $this->assertTrue(!$analyzer->isSpammerDetected($response));
     }
 }

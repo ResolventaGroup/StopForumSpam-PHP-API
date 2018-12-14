@@ -2,17 +2,24 @@
 
 namespace Resolventa\StopForumSpamApi;
 
-use Carbon\Carbon;
 use Resolventa\StopForumSpamApi\Exception\InvalidResponseFormatException;
 use Resolventa\StopForumSpamApi\Exception\ResponseErrorException;
 use \stdClass;
 
 class ResponseAnalyzer
 {
-    private $response = [];
     private $settings;
 
-    public function __construct(stdClass $response, ResponseAnalyzerSettings $settings)
+    public function __construct(ResponseAnalyzerSettings $settings)
+    {
+        $this->settings = $settings;
+    }
+
+    /**
+     * @throws InvalidResponseFormatException
+     * @throws ResponseErrorException
+     */
+    public function isSpammerDetected(stdClass $response): bool
     {
         if(!isset($response->success)) {
             throw new InvalidResponseFormatException('StopForumSpam API malformed response');
@@ -22,16 +29,10 @@ class ResponseAnalyzer
             throw new ResponseErrorException('StopForumSpam API invalid response with error: ' . $response->error);
         }
 
-        $this->response = $response;
-        $this->settings = $settings;
-    }
-
-    public function isSpammerDetected(): bool
-    {
         $spamFlagsCount = 0;
         $types = ['email', 'username', 'ip'];
         foreach ($types as $type) {
-            if($this->isSpam($type)) {
+            if(isset($response->$type) && $this->isSpam($response->$type)) {
                 $spamFlagsCount++;
             }
         }
@@ -43,23 +44,17 @@ class ResponseAnalyzer
         return false;
     }
 
-    private function isSpam(string $type): bool
+    private function isSpam(stdClass $typeInfo): bool
     {
-        if(!isset($this->response->$type)) {
+        if($this->wasNeverSeenAsSpam($typeInfo)) {
             return false;
         }
 
-        $info = $this->response->$type;
-
-        if($this->wasNeverSeenAsSpam($info)) {
-            return false;
-        }
-
-        if($this->isSpamConfidenceScoreAboveThreshold($info)) {
+        if($this->isSpamConfidenceScoreAboveThreshold($typeInfo)) {
             return true;
         }
 
-        if($this->wasRecentlySeenAsSpam($info) && $this->wasFrequentlySeenAsSpam($info)) {
+        if($this->wasRecentlySeenAsSpam($typeInfo) && $this->wasFrequentlySeenAsSpam($typeInfo)) {
             return true;
         }
 

@@ -2,6 +2,7 @@
 use Resolventa\StopForumSpamApi\ResponseAnalyzer;
 use Resolventa\StopForumSpamApi\ResponseAnalyzerSettings;
 use Resolventa\StopForumSpamApi\StopForumSpamApi;
+use Resolventa\StopForumSpamApi\Exception\StopForumSpamApiException;
 
 include ('vendor/autoload.php');
 
@@ -39,15 +40,15 @@ var_dump($response);
  * $settings->setFlagLastSeenDaysAgo(14);
  * $settings->setConfidenceThreshold(70);
  */
+$analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
+
 try {
-    $analyzer = new ResponseAnalyzer($response, new ResponseAnalyzerSettings());
-} catch (Exception $e) {
+    if($analyzer->isSpammerDetected($response)) {
+        echo "Spam user detected. \n";
+    } else {
+        echo "User is ok. \n";
+    }
+} catch (StopForumSpamApiException $e) {
     echo 'Bad response: ',  $e->getMessage(), "\n";
     exit();
-}
-
-if($analyzer->isSpammerDetected()) {
-    echo "Spam user detected. \n";
-} else {
-    echo "User is ok. \n";
 }
