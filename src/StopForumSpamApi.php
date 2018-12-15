@@ -37,7 +37,7 @@ class StopForumSpamApi
         return $this;
     }
 
-    public function getCheckResponse()
+    public function getCheckResponse(): \stdClass
     {
         $ch = curl_init($this->buildCheckUrl());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
