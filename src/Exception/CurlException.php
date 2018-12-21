@@ -2,6 +2,6 @@
 
 namespace Resolventa\StopForumSpamApi\Exception;
 
-class NoApiKeyException extends StopForumSpamApiException
+class CurlException extends StopForumSpamApiException
 {
 }

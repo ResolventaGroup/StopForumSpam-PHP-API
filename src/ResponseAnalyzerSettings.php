@@ -1,4 +1,5 @@
 <?php
+
 namespace Resolventa\StopForumSpamApi;
 
 class ResponseAnalyzerSettings
@@ -47,5 +48,4 @@ class ResponseAnalyzerSettings
     {
         $this->confidenceThreshold = $confidenceThreshold;
     }
-
 }

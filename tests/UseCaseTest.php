@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +9,7 @@ use Resolventa\StopForumSpamApi\StopForumSpamApi;
 
 class UseCaseTest extends TestCase
 {
-    public function testStopForumSpamApiCall()
+    public function testStopForumSpamApiCall(): void
     {
         $stopForumSpamApi = new StopForumSpamApi();
         $stopForumSpamApi
@@ -18,6 +19,6 @@ class UseCaseTest extends TestCase
         $response = $stopForumSpamApi->getCheckResponse();
 
         $analyzer = new ResponseAnalyzer(new ResponseAnalyzerSettings());
-        $this->assertTrue(!$analyzer->isSpammerDetected($response));
+        $this->assertFalse($analyzer->isSpammerDetected($response));
     }
 }

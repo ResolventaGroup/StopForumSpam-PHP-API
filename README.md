@@ -28,7 +28,7 @@ use Resolventa\StopForumSpamApi\ResponseAnalyzerSettings;
 use Resolventa\StopForumSpamApi\StopForumSpamApi;
 use Resolventa\StopForumSpamApi\Exception\StopForumSpamApiException;
 
-include ('vendor/autoload.php');
+include 'vendor/autoload.php';
 
 $stopForumSpamApi = new StopForumSpamApi();
 
