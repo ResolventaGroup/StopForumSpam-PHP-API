@@ -8,7 +8,7 @@ Composer friendly PHP API library and response analyzer for StopForumSpam servic
 
 ## Requirements
 
-* PHP >= 7.1
+* PHP >= 8.1
 * cURL extension
 
 ## Installation
