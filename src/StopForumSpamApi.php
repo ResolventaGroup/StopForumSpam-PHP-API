@@ -8,14 +8,15 @@ use Resolventa\StopForumSpamApi\Exception\SubmitSpamReportException;
 
 class StopForumSpamApi
 {
-    private $username;
-    private $email;
-    private $ip;
-    private $apiKey;
     private const CHECK_API_URL = 'http://api.stopforumspam.org/api';
     private const REPORT_API_URL = 'http://www.stopforumspam.com/add';
 
-    public function __construct(string $apiKey = null)
+    private string $username;
+    private string $email;
+    private string $ip;
+    private ?string $apiKey;
+
+    public function __construct(?string $apiKey = null)
     {
         $this->apiKey = $apiKey;
     }
@@ -41,7 +42,7 @@ class StopForumSpamApi
         return $this;
     }
 
-    public function getCheckResponse(): \stdClass
+    public function getCheckResponse(): object
     {
         $ch = curl_init($this->buildCheckUrl());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

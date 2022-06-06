@@ -4,10 +4,10 @@ namespace Resolventa\StopForumSpamApi;
 
 class ResponseAnalyzerSettings
 {
-    private $minSpamFlagsCount = 1;
-    private $minFlagAppearanceFrequency = 5;
-    private $flagLastSeenDaysAgo = 7;
-    private $confidenceThreshold = 90;
+    private int $minSpamFlagsCount = 1;
+    private int $minFlagAppearanceFrequency = 5;
+    private int $flagLastSeenDaysAgo = 7;
+    private int $confidenceThreshold = 90;
 
     public function getMinSpamFlagsCount(): int
     {

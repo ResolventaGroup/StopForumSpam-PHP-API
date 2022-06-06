@@ -2,13 +2,13 @@
 
 namespace Resolventa\StopForumSpamApi;
 
+use DateTime;
 use Resolventa\StopForumSpamApi\Exception\InvalidResponseFormatException;
 use Resolventa\StopForumSpamApi\Exception\ResponseErrorException;
-use \stdClass;
 
 class ResponseAnalyzer
 {
-    private $settings;
+    private ResponseAnalyzerSettings $settings;
 
     public function __construct(ResponseAnalyzerSettings $settings)
     {
@@ -19,7 +19,7 @@ class ResponseAnalyzer
      * @throws InvalidResponseFormatException
      * @throws ResponseErrorException
      */
-    public function isSpammerDetected(stdClass $response): bool
+    public function isSpammerDetected(object $response): bool
     {
         if (!isset($response->success)) {
             throw new InvalidResponseFormatException('StopForumSpam API malformed response');
@@ -42,7 +42,7 @@ class ResponseAnalyzer
         return $spamFlagsCount >= $this->settings->getMinSpamFlagsCount();
     }
 
-    private function isSpam(stdClass $typeInfo): bool
+    private function isSpam(object $typeInfo): bool
     {
         if ($this->wasNeverSeenAsSpam($typeInfo)) {
             return false;
@@ -59,26 +59,26 @@ class ResponseAnalyzer
         return false;
     }
 
-    private function wasNeverSeenAsSpam(stdClass $info): bool
+    private function wasNeverSeenAsSpam(object $info): bool
     {
         return !$info->appears;
     }
 
-    private function isSpamConfidenceScoreAboveThreshold(stdClass $info): bool
+    private function isSpamConfidenceScoreAboveThreshold(object $info): bool
     {
         return $info->confidence >= $this->settings->getConfidenceThreshold();
     }
 
-    private function wasRecentlySeenAsSpam(stdClass $info): bool
+    private function wasRecentlySeenAsSpam(object $info): bool
     {
-        $lastSeen = \DateTime::createFromFormat('Y-m-d H:i:s', $info->lastseen);
-        $now = new \DateTime();
+        $lastSeen = DateTime::createFromFormat('Y-m-d H:i:s', $info->lastseen);
+        $now = new DateTime();
         $differenceInDays = $now->diff($lastSeen)->format('%a');
 
         return $differenceInDays < $this->settings->getFlagLastSeenDaysAgo();
     }
 
-    private function wasFrequentlySeenAsSpam(stdClass $info): bool
+    private function wasFrequentlySeenAsSpam(object $info): bool
     {
         return $info->frequency >= $this->settings->getMinFlagAppearanceFrequency();
     }
