@@ -8,16 +8,28 @@ use Resolventa\StopForumSpamApi\Exception\SubmitSpamReportException;
 
 class StopForumSpamApi
 {
+    public const DEFAULT_CHECK_API_URL = 'https://www.stopforumspam.com/api';
+    public const DEFAULT_REPORT_API_URL = 'https://www.stopforumspam.com/add';
+
     private $username;
     private $email;
     private $ip;
     private $apiKey;
-    private const CHECK_API_URL = 'http://api.stopforumspam.org/api';
-    private const REPORT_API_URL = 'http://www.stopforumspam.com/add';
+    private $checkApiUrl;
+    private $reportApiUrl;
 
-    public function __construct(string $apiKey = null)
-    {
+    public function __construct(
+        ?string $apiKey = null,
+        string $checkApiUrl = self::DEFAULT_CHECK_API_URL,
+        string $reportApiUrl = self::DEFAULT_REPORT_API_URL
+    ) {
+        if ($checkApiUrl === '' || $reportApiUrl === '') {
+            throw new \InvalidArgumentException('StopForumSpam API URL must not be empty');
+        }
+
         $this->apiKey = $apiKey;
+        $this->checkApiUrl = $checkApiUrl;
+        $this->reportApiUrl = $reportApiUrl;
     }
 
     public function checkEmail(string $email): self
@@ -69,7 +81,7 @@ class StopForumSpamApi
 
         $queryString = http_build_query($query);
 
-        return self::CHECK_API_URL."?$queryString&json";
+        return $this->checkApiUrl."?$queryString&json";
     }
 
     public function submitSpamReport(string $username, string $ip, string $email, string $evidence): bool
@@ -85,7 +97,7 @@ class StopForumSpamApi
         $postFields['email'] = $email;
         $postFields['evidence'] = $evidence;
 
-        $ch = curl_init(self::REPORT_API_URL);
+        $ch = curl_init($this->reportApiUrl);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postFields));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
