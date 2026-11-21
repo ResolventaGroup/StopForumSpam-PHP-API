@@ -3,6 +3,7 @@
 namespace Resolventa\StopForumSpamApi;
 
 use Resolventa\StopForumSpamApi\Exception\CurlException;
+use Resolventa\StopForumSpamApi\Exception\InvalidResponseFormatException;
 use Resolventa\StopForumSpamApi\Exception\NoApiKeyException;
 use Resolventa\StopForumSpamApi\Exception\SubmitSpamReportException;
 
@@ -70,7 +71,14 @@ class StopForumSpamApi
         }
         curl_close($ch);
 
-        return json_decode($response);
+        $decoded = json_decode($response);
+        if (!$decoded instanceof \stdClass) {
+            throw new InvalidResponseFormatException(
+                sprintf('Unexpected StopForumSpam response: %s', substr((string) $response, 0, 200))
+            );
+        }
+
+        return $decoded;
     }
 
     private function buildCheckUrl(): string
@@ -118,6 +126,7 @@ class StopForumSpamApi
         }
         $httpCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         if ($httpCode !== 200) {
+            curl_close($ch);
             throw new SubmitSpamReportException(sprintf('
                 Can\'t submit spam report to StopForumSpam service. Response HTTP code is %s. Response body: %s',
                     $httpCode, $response
