@@ -78,6 +78,18 @@ try {
 }
 ```
 
+### Custom API URLs
+By default the library calls `https://www.stopforumspam.com/api` and `https://www.stopforumspam.com/add`.
+Both URLs can be overridden, e.g. for a proxy or a test server:
+
+```php
+$stopForumSpamApi = new StopForumSpamApi(
+    null,
+    'https://sfs-proxy.example.com/api',
+    StopForumSpamApi::DEFAULT_REPORT_API_URL
+);
+```
+
 ### Response analyzer
 The library is included with an analyzer class to check StopForumSpam API response and
 decide if user is spammer or not.
